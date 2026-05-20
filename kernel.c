@@ -6,11 +6,34 @@
 
 void kmain(void)
 {
-   // const char* string = "hello manan this is mana";
-  char* a = kmalloc(64);
-  char* b = kmalloc(64);
-  uart_printf("a: %d\n", a);
-  uart_printf("b: %d\n", b);
-  uart_printf("hi am manan and this is my kernel called %s i am %d years old", "Mana", 14);
-   while(1);
+    // 1. Get your bitmap pointer and wipe it to 0xFF like you did before
+    uint8_t* bitmap = (uint8_t*)kmalloc(8192);
+    for(int i = 0; i < 8192; i++) bitmap[i] = 0xFF;
+
+    // 2. Initialize your free space (Let's say from current heap up to 256MB limit)
+    uintptr_t free_mem_start = (uintptr_t)bitmap + 8192; 
+    uintptr_t free_mem_end   = &_heap_start + (256 * 1024 * 1024); // 256MB boundary
+    
+    flip_bit(bitmap, free_mem_start, free_mem_end);
+    uart_printf("PMM Initialized.\n");
+
+    // 3. Test Allocation 1
+    void* page1 = allocate_page(bitmap);
+    uart_printf("First allocation page address: 0x%x\n", page1);
+
+    // 4. Test Freeing
+    free_bit(bitmap, (uintptr_t)page1);
+    uart_printf("Freed first page.\n");
+
+    // 5. Test Allocation 2 (The Moment of Truth)
+    void* page2 = allocate_page(bitmap);
+    uart_printf("Second allocation page address: 0x%x\n", page2);
+
+    if (page1 == page2) {
+        uart_printf("SUCCESS: Memory manager successfully recycled the page!\n");
+    } else {
+        uart_printf("FAIL: Memory manager leaked or missed the free bit.\n");
+    }
+
+    while(1);
 }
