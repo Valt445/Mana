@@ -1,0 +1,163 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-ffreestanding",
+      "-mcpu=cortex-a57",
+      "-mgeneral-regs-only",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Isrc/kernel",
+      "-Isrc/mm",
+      "-Isrc/fs",
+      "-Isrc/drivers",
+      "-Isrc/lib",
+      "-c",
+      "-o",
+      "build/drivers/uart.o",
+      "src/drivers/uart.c"
+    ],
+    "directory": "/home/valmerbe/Mana",
+    "file": "/home/valmerbe/Mana/src/drivers/uart.c",
+    "output": "/home/valmerbe/Mana/build/drivers/uart.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-ffreestanding",
+      "-mcpu=cortex-a57",
+      "-mgeneral-regs-only",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Isrc/kernel",
+      "-Isrc/mm",
+      "-Isrc/fs",
+      "-Isrc/drivers",
+      "-Isrc/lib",
+      "-c",
+      "-o",
+      "build/fs/filesystem.o",
+      "src/fs/filesystem.c"
+    ],
+    "directory": "/home/valmerbe/Mana",
+    "file": "/home/valmerbe/Mana/src/fs/filesystem.c",
+    "output": "/home/valmerbe/Mana/build/fs/filesystem.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-ffreestanding",
+      "-mcpu=cortex-a57",
+      "-mgeneral-regs-only",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Isrc/kernel",
+      "-Isrc/mm",
+      "-Isrc/fs",
+      "-Isrc/drivers",
+      "-Isrc/lib",
+      "-c",
+      "-o",
+      "build/kernel/kernel.o",
+      "src/kernel/kernel.c"
+    ],
+    "directory": "/home/valmerbe/Mana",
+    "file": "/home/valmerbe/Mana/src/kernel/kernel.c",
+    "output": "/home/valmerbe/Mana/build/kernel/kernel.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-ffreestanding",
+      "-mcpu=cortex-a57",
+      "-mgeneral-regs-only",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Isrc/kernel",
+      "-Isrc/mm",
+      "-Isrc/fs",
+      "-Isrc/drivers",
+      "-Isrc/lib",
+      "-c",
+      "-o",
+      "build/mm/kmalloc.o",
+      "src/mm/kmalloc.c"
+    ],
+    "directory": "/home/valmerbe/Mana",
+    "file": "/home/valmerbe/Mana/src/mm/kmalloc.c",
+    "output": "/home/valmerbe/Mana/build/mm/kmalloc.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-ffreestanding",
+      "-mcpu=cortex-a57",
+      "-mgeneral-regs-only",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Isrc/kernel",
+      "-Isrc/mm",
+      "-Isrc/fs",
+      "-Isrc/drivers",
+      "-Isrc/lib",
+      "-c",
+      "-o",
+      "build/mm/mmu.o",
+      "src/mm/mmu.c"
+    ],
+    "directory": "/home/valmerbe/Mana",
+    "file": "/home/valmerbe/Mana/src/mm/mmu.c",
+    "output": "/home/valmerbe/Mana/build/mm/mmu.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-ffreestanding",
+      "-mcpu=cortex-a57",
+      "-mgeneral-regs-only",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Isrc/kernel",
+      "-Isrc/mm",
+      "-Isrc/fs",
+      "-Isrc/drivers",
+      "-Isrc/lib",
+      "-c",
+      "-o",
+      "build/kernel/boot.o",
+      "src/kernel/boot.S"
+    ],
+    "directory": "/home/valmerbe/Mana",
+    "file": "/home/valmerbe/Mana/src/kernel/boot.S",
+    "output": "/home/valmerbe/Mana/build/kernel/boot.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/aarch64-linux-gnu-gcc",
+      "-ffreestanding",
+      "-mcpu=cortex-a57",
+      "-mgeneral-regs-only",
+      "-Wall",
+      "-Wextra",
+      "-g",
+      "-Isrc/kernel",
+      "-Isrc/mm",
+      "-Isrc/fs",
+      "-Isrc/drivers",
+      "-Isrc/lib",
+      "-c",
+      "-o",
+      "build/mm/mmu_init.o",
+      "src/mm/mmu_init.S"
+    ],
+    "directory": "/home/valmerbe/Mana",
+    "file": "/home/valmerbe/Mana/src/mm/mmu_init.S",
+    "output": "/home/valmerbe/Mana/build/mm/mmu_init.o"
+  }
+]

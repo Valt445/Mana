@@ -25,6 +25,7 @@ SECTIONS
   {
     *(.bss*)
   } > RAM
+  . = ALIGN(4096);
   _heap_start = .;
   _heap_max = 0x40000000 + 0x10000000;
 }
