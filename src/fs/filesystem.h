@@ -1,8 +1,8 @@
 #pragma once
 
+#include "minix.h"
 #include <stddef.h>
 #include <stdint.h>
-
 #define BLOCK_SIZE 1024
 #define BLOCK_NUM 16384
 
@@ -14,4 +14,7 @@ uint16_t alloc_inode(void);
 uint16_t alloc_zone(void);
 void free_inode(uint16_t inum);
 void free_zone(uint16_t block_number);
+void read_inode(uint16_t inum, struct inode *ip);
+void write_inode(uint16_t inum, struct inode *ip);
 void mkfs();
+uint16_t bmap(struct inode *ip, uint16_t logical_block, int allocate);

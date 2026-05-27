@@ -1,9 +1,9 @@
 #include "filesystem.h"
+#include "kmalloc.h"
 #include "minix.h"
 #include <stdint.h>
-
 static struct super_block sb;
-
+struct inode s_inode;
 uint8_t disk[16 * 1024 * 1024];
 
 void blk_read(size_t block_num, uint8_t *buffer) {
@@ -32,7 +32,6 @@ void mkfs() {
   uint8_t block[BLOCK_SIZE] = {0};
   blk_read(1, block);
   struct super_block *sba = (struct super_block *)block;
-
   sba->s_ninodes = 512;
   sba->s_nzones = 16364;
   sba->s_imap_blocks = 1;
@@ -57,6 +56,11 @@ void mkfs() {
   uint8_t inode_root[BLOCK_SIZE] = {0};
   blk_read(5, inode_root);
 
+  uint8_t zero_block[BLOCK_SIZE] = {0};
+
+  for (uint16_t blk = 5; blk <= 20; blk++) {
+    blk_write(blk, zero_block);
+  }
   struct inode *root = (struct inode *)inode_root;
 
   root->i_mode = 0x41ED;
@@ -167,8 +171,41 @@ void free_inode(uint16_t inum) {
   blk_write(2, bitmap);
 }
 
+void read_inode(uint16_t inum, struct inode *ip) {
+  uint16_t index = inum - 1;
+  uint16_t block_num = 5 + (index / 32);
+  uint16_t byte_offset = (index % 32) * 32;
 
+  uint8_t block[BLOCK_SIZE];
+  blk_read(block_num, block);
 
-  
-  
-  
+  *ip = *(struct inode *)(block + byte_offset);
+}
+
+void write_inode(uint16_t inum, struct inode *ip) {
+  uint16_t index = inum - 1;
+  uint16_t block_num = 5 + (index / 32);
+  uint16_t byte_offset = (index % 32) * 32;
+
+  uint8_t block[BLOCK_SIZE];
+  blk_read(block_num, block);
+
+  *(struct inode *)(block + byte_offset) = *ip;
+
+  blk_write(block_num, block);
+}
+
+uint16_t bmap(struct inode *ip, uint16_t logical_block, int allocate) {
+  if (logical_block < 7) {
+    uint16_t blk = ip->i_zone[logical_block];
+    if (blk == 0 && allocate) {
+      blk = alloc_zone();
+      if (blk == 0)
+        return 0;
+      ip->i_zone[logical_block] = blk;
+    }
+    return blk;
+  }
+
+  return 0;
+}

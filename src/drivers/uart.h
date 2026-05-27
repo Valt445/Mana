@@ -23,4 +23,7 @@ char uart_getchar();
 void read_line(char *buf, int size);
 int strcmp(const char *a, const char *b);
 int strncmp(const char *a, const char *b, int n);
+size_t strlen(const char *s);
+char *strchr(const char *s, int c);
+int parse_two_args(char *input, char **arg1, char **arg2);
 #endif

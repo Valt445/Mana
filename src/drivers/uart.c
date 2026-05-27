@@ -54,49 +54,51 @@ void uart_printf(char *string, ...) {
 
   va_end(args);
 }
+
+size_t strlen(const char *s) {
+  size_t n = 0;
+  while (s[n] != '\0') {
+    n++;
+  }
+  return n;
+}
 // uart_getchar: poll the UART until a character arrives
 char uart_getchar(void) {
   volatile uint32_t *dr = (uint32_t *)(UART_BASE + 0x00); // DR
   volatile uint32_t *fr = (uint32_t *)(UART_BASE + 0x18); // FR
   while (*fr & (1 << 4)) {
-  } // wait while RXFE (bit 4) is set
+  }
   return (char)(*dr & 0xFF);
 }
 
-// read_line: read a line of input with echo and basic editing
-// buf: pointer to output buffer
-// size: maximum bytes to store (including null terminator)
 void read_line(char *buf, int size) {
   int i = 0;
   while (i < size - 1) {
     char c = uart_getchar();
 
-    // Enter (carriage return or line feed) -> finish
     if (c == '\r' || c == '\n') {
       buf[i] = '\0';
       uart_putc('\r');
       uart_putc('\n');
       return;
     }
-    // Backspace (ASCII 0x08 or 0x7F)
+
     else if (c == 0x08 || c == 0x7F) {
       if (i > 0) {
         i--;
-        // Erase the character on terminal: backspace, space, backspace
         uart_putc('\b');
         uart_putc(' ');
         uart_putc('\b');
       }
     }
-    // Printable characters (space to ~)
+
     else if (c >= ' ' && c <= '~') {
       buf[i] = c;
       i++;
       uart_putc(c); // echo
     }
-    // Ignore all other control characters
   }
-  // Buffer full without Enter – null-terminate anyway
+
   buf[i] = '\0';
 }
 
@@ -115,4 +117,33 @@ int strncmp(const char *a, const char *b, int n) {
     n--;
   }
   return (n == 0) ? 0 : *(unsigned char *)a - *(unsigned char *)b;
+}
+
+char *strchr(const char *s, int c) {
+  while (*s != '\0') {
+    if (*s == c)
+      return (char *)s;
+    s++;
+  }
+  return (c == '\0') ? (char *)s : NULL;
+}
+
+int parse_two_args(char *input, char **arg1, char **arg2) {
+    while (*input == ' ') input++;
+    if (*input == '\0') return 0;
+
+    *arg1 = input;
+    while (*input != ' ' && *input != '\0') input++;
+    if (*input == ' ') {
+        *input = '\0';
+        input++;
+    }
+    while (*input == ' ') input++;
+    if (*input == '\0') return 0;
+
+    *arg2 = input;
+    while (*input != ' ' && *input != '\0') input++;
+    if (*input == ' ') *input = '\0';
+
+    return 1;
 }
