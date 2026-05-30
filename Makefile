@@ -36,7 +36,7 @@ kernel.elf: $(OBJS)
 	$(LD) -T linker.ld $(OBJS) -o $@
 
 run: kernel.elf
-	qemu-system-aarch64 -machine virt -cpu cortex-a57 -m 256M -kernel kernel.elf -nographic
+	qemu-system-aarch64 -machine virt,gic-version=2 -cpu cortex-a57 -m 256M -kernel kernel.elf -nographic
 
 debug: kernel.elf
 	qemu-system-aarch64 -machine virt -cpu cortex-a57 -m 256M -kernel kernel.elf -nographic -s -S

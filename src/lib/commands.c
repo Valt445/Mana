@@ -94,7 +94,7 @@ void file_write(struct inode *file, const char *buf, uint32_t count) {
     if (blk == last_blk) {
       block_count = ((offset + count) % BLOCK_SIZE) - block_start;
     } else {
-      block_count = BLOCK_SIZE - block_count;
+      block_count = BLOCK_SIZE - block_start;
     }
 
     if (block_count == 0) {
@@ -284,44 +284,4 @@ void cmd_rm(char *name) {
       }
     }
   }
-}
-
-void cmd_cp(char *src_name, char *dst_name) {
-  uint16_t src_inum = namei(src_name);
-  if (src_inum == 0) {
-    uart_puts("Source not found.\n");
-    return;
-  }
-  uint16_t dst_inum = namei(dst_name);
-  if (dst_inum == 0) {
-    dst_inum = alloc_inode();
-    struct inode file = {0};
-    file.i_mode = 0x81A4;
-    file.i_nlinks = 1;
-    write_inode(dst_inum, &file);
-    struct inode dir;
-    read_inode(cwd_inum, &dir);
-    dir_add_entry(&dir, cwd_inum, dst_name, dst_inum);
-  }
-  struct inode src, dst;
-  read_inode(src_inum, &src);
-  read_inode(dst_inum, &dst);
-  dst.i_size = 0;
-  write_inode(dst_inum, &dst);
-
-  uint8_t buf[BLOCK_SIZE];
-  for (uint32_t offset = 0; offset < src.i_size;) {
-    uint16_t phys = bmap(&src, offset / BLOCK_SIZE, 0);
-    if (phys == 0)
-      break;
-    blk_read(phys, buf);
-    uint32_t chunk = src.i_size - offset;
-    if (chunk > BLOCK_SIZE)
-      chunk = BLOCK_SIZE;
-    read_inode(dst_inum, &dst);
-    file_write(&dst, (char *)buf, chunk);
-    write_inode(dst_inum, &dst);
-    offset += chunk;
-  }
-  uart_puts("Copied.\n");
 }

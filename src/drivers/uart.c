@@ -33,6 +33,20 @@ void uart_putd(int n) {
     uart_putc(buf[j]);
 }
 
+void uart_puthex64(unsigned long long val) {
+    // A 64-bit integer has 16 hex digits
+    // We start shifting from bit 60 down to 0
+    for (int i = 60; i >= 0; i -= 4) {
+        
+        unsigned int digit = (val >> i) & 0xF; 
+        
+        if (digit < 10) {
+            uart_putc('0' + digit);
+        } else {
+            uart_putc('a' + digit - 10);
+        }
+    }
+}
 void uart_printf(char *string, ...) {
   va_list args;
   va_start(args, string);
@@ -46,6 +60,10 @@ void uart_printf(char *string, ...) {
       } else if (string[i] == 's') {
         char *char_arg = va_arg(args, char *);
         uart_puts(char_arg);
+      } else if (string[i] == 'x') {
+        // Extract the argument as a 64-bit unsigned int
+        unsigned long long hex_arg = va_arg(args, unsigned long long);
+        uart_puthex64(hex_arg);
       }
     } else {
       uart_putc(string[i]);

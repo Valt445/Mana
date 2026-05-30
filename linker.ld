@@ -7,10 +7,15 @@ MEMORY
 
 SECTIONS
 {
-  .text : 
+  .text :
   {
+    . = ALIGN(2048);        /* Force 2 KB alignment for the vector table */
+    _vectors_start = .;
+    *(.vectors)             /* Put your .vectors section here */
+    _vectors_end = .;
+
     _stext = .;
-    *(.text*)
+    *(.text*)               /* All other code follows */
     _etext = .;
   } > RAM
 
