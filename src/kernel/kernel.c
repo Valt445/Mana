@@ -79,15 +79,12 @@ void exception_svc_test(void) {
 
 void kmain(void) {
   uart_puts("--- MANA OS ---\n");
-  // Remove this: extern void vectors_start(void);
 
-  // Add this:
   extern void vectors(void);
   raw_write_vbar_el1((uint64_t)vectors);
   uart_puts("Vector table loaded into VBAR_EL1.\n");
-  exception_svc_test();
+
   timer_test();
-  // After MMU and UART init:
 
   char cmd[256];
   while (1) {

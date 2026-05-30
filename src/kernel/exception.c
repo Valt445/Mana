@@ -63,15 +63,20 @@ restore_irq_out:
 void common_trap_handler(struct _exception_frame *exc) {
   uint32_t type = exc->exc_type & 0xff;
 
-  // 1. Handle Synchronous Exceptions (Crashes and SVCs)
-  if (type == AARCH64_EXC_SYNC_SPX || type == AARCH64_EXC_SYNC_SP0) {
+  if (type == AARCH64_EXC_SYNC_SPX || type == AARCH64_EXC_SYNC_SP0 ||
+      type == 0x21 | type == 0x22) {
 
     uint32_t ec = (exc->exc_esr >> 26) & 0x3F;
 
     if (ec == ESR_EC_SVC64) {
       uint32_t svc_num = exc->exc_esr & 0xFFFF;
+      char *user_string = (char *)exc->x0;
+
       uart_printf("\n[Kernel] SVC System Call detected! Number: 0x%x\n",
                   svc_num);
+
+      uart_printf("[Kernel] User App says: %s\n", user_string);
+
       exc->exc_elr += 4;
     } else {
       uart_printf("\n[Kernel PANIC] Unhandled Synchronous Exception!\n");

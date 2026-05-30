@@ -15,3 +15,5 @@ void cmd_mv(char *src, char *dst);
 // void cmd_rename(char *old_name, char *new_name);
 void cmd_rm(char *name);
 void cmd_cp(char *src_name, char *dst_name);
+void dummy_user_app(void);
+void cmd_run_test(void);

@@ -285,3 +285,26 @@ void cmd_rm(char *name) {
     }
   }
 }
+
+extern void drop_to_el0(uint64_t pc, uint64_t sp);
+
+void dummy_user_app(void) {
+  char *msg = "SUCCESS: Hello from User Space (EL0)!\n";
+  asm volatile("mov x0, %0\n"
+               "svc #0xdead\n"
+               :
+               : "r"(msg)
+               : "x0", "memory");
+  while (1) {
+  }
+}
+
+void cmd_run_test(void) {
+  uart_puts("Allocating EL0 stack and dropping privileges...\n");
+
+  uint8_t *user_stack = kmalloc(4096);
+  uint64_t sp = (uint64_t)user_stack + 4096;
+  uint64_t pc = (uint64_t)&dummy_user_app;
+
+  drop_to_el0(pc, sp);
+}
